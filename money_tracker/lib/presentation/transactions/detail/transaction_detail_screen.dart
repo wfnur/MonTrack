@@ -223,16 +223,14 @@ class TransactionDetailScreen extends ConsumerWidget {
                   content: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (pocket != null) ...[
-                        Icon(
-                          _pocketIcon(pocket.icon),
-                          size: 18,
-                          color: Color(pocket.color),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
+                      Icon(
+                        pocket != null ? _pocketIcon(pocket.icon) : Icons.account_balance_wallet_outlined,
+                        size: 18,
+                        color: pocket != null ? Color(pocket.color) : AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        pocket?.name ?? 'Unknown Pocket',
+                        pocket?.name ?? 'Deleted wallet',
                         style: AppTextStyles.body.copyWith(
                           color: context.colorTextPrimary,
                           fontWeight: FontWeight.w600,

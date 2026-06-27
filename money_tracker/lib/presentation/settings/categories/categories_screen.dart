@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../../data/models/category_model.dart';
 import '../../../../domain/providers/category_providers.dart';
+import '../../../../domain/providers/transaction_providers.dart';
 import 'category_form_sheet.dart';
 
 class CategoriesScreen extends ConsumerWidget {
@@ -287,11 +288,25 @@ class _CategoryTile extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    if (category.isDefault) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cannot delete a default category')),
+      );
+      return;
+    }
+
+    final count = await ref.read(transactionRepositoryProvider).countByCategory(category.id);
+    if (!context.mounted) return;
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Category?'),
-        content: Text('Are you sure you want to delete "${category.name}"? Transactions using this category will not be deleted.'),
+        content: Text(
+          count > 0
+              ? 'This category has $count transaction(s). Deleting it will keep those transactions but they will be unlinked from any category. Continue?'
+              : 'Are you sure you want to delete "${category.name}"?',
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         actions: [
           TextButton(

@@ -57,4 +57,18 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
     }
     return query.map((row) => row.read(sumAmount) ?? 0.0).watchSingle();
   }
+
+  Future<int> countByPocket(String pocketId) async {
+    final countExp = transactions.id.count();
+    final query = selectOnly(transactions)..addColumns([countExp])..where(transactions.pocketId.equals(pocketId));
+    final row = await query.getSingle();
+    return row.read(countExp) ?? 0;
+  }
+
+  Future<int> countByCategory(String categoryId) async {
+    final countExp = transactions.id.count();
+    final query = selectOnly(transactions)..addColumns([countExp])..where(transactions.categoryId.equals(categoryId));
+    final row = await query.getSingle();
+    return row.read(countExp) ?? 0;
+  }
 }

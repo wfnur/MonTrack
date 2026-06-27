@@ -14,8 +14,13 @@ import 'transaction_repository.dart';
 class ImportResult {
   final int count;
   final List<TransactionModel> records;
+  final List<int> skippedRows;
 
-  const ImportResult({required this.count, required this.records});
+  const ImportResult({
+    required this.count,
+    required this.records,
+    this.skippedRows = const [],
+  });
 }
 
 class ExportRepository {
@@ -116,22 +121,34 @@ class ExportRepository {
     final pocMap = {for (var p in existingPockets) p.name.toLowerCase(): p};
 
     final records = <TransactionModel>[];
+    final skippedRows = <int>[];
+    int rowIndex = 1;
 
     for (final line in lines.skip(1)) {
+      rowIndex++;
       if (line.trim().isEmpty) continue;
       final fields = _parseCsvLine(line.trim());
-      if (fields.length < 3) continue;
+      if (fields.length < 3) {
+        skippedRows.add(rowIndex);
+        continue;
+      }
 
-      final dateStr = fields[0];
-      final typeStr = fields[1].toLowerCase();
-      final amountStr = fields[2];
-      final catName = fields.length > 3 ? fields[3] : 'General';
-      final pocName = fields.length > 4 ? fields[4] : 'Cash';
-      final note = fields.length > 6 ? fields[6] : '';
+      final dateStr = fields[0].trim();
+      final typeStr = fields[1].trim().toLowerCase();
+      final amountStr = fields[2].trim();
+      final catName = fields.length > 3 ? fields[3].trim() : 'General';
+      final pocName = fields.length > 4 ? fields[4].trim() : 'Cash';
+      final note = fields.length > 6 ? fields[6].trim() : '';
 
-      final date = _parseDate(dateStr);
+      final date = _tryParseDate(dateStr);
+      final amount = double.tryParse(amountStr);
+
+      if (date == null || amount == null || amount <= 0 || (typeStr != 'income' && typeStr != 'expense')) {
+        skippedRows.add(rowIndex);
+        continue;
+      }
+
       final type = typeStr == 'income' ? TransactionType.income : TransactionType.expense;
-      final amount = double.tryParse(amountStr) ?? 0.0;
 
       // Ensure category
       var cat = catMap[catName.toLowerCase()];
@@ -178,7 +195,7 @@ class ExportRepository {
       ));
     }
 
-    return ImportResult(count: records.length, records: records);
+    return ImportResult(count: records.length, records: records, skippedRows: skippedRows);
   }
 
   Future<ImportResult> _importFromXlsx(String filePath) async {
@@ -196,21 +213,30 @@ class ExportRepository {
     final pocMap = {for (var p in existingPockets) p.name.toLowerCase(): p};
 
     final records = <TransactionModel>[];
+    final skippedRows = <int>[];
+    int rowIndex = 1;
 
     for (final row in table.rows.skip(1)) {
+      rowIndex++;
       if (row.isEmpty) continue;
-      final dateStr = _cellToString(row.length > 0 ? row[0] : null);
-      final typeStr = _cellToString(row.length > 1 ? row[1] : null).toLowerCase();
-      final amountStr = _cellToString(row.length > 2 ? row[2] : null);
-      final catName = _cellToString(row.length > 3 ? row[3] : null);
-      final pocName = _cellToString(row.length > 4 ? row[4] : null);
-      final note = _cellToString(row.length > 6 ? row[6] : null);
+      final dateStr = _cellToString(row.length > 0 ? row[0] : null).trim();
+      final typeStr = _cellToString(row.length > 1 ? row[1] : null).trim().toLowerCase();
+      final amountStr = _cellToString(row.length > 2 ? row[2] : null).trim();
+      final catName = _cellToString(row.length > 3 ? row[3] : null).trim();
+      final pocName = _cellToString(row.length > 4 ? row[4] : null).trim();
+      final note = _cellToString(row.length > 6 ? row[6] : null).trim();
 
-      if (amountStr.isEmpty) continue;
+      if (dateStr.isEmpty && typeStr.isEmpty && amountStr.isEmpty) continue;
 
-      final date = _parseDate(dateStr);
+      final date = _tryParseDate(dateStr);
+      final amount = double.tryParse(amountStr);
+
+      if (date == null || amount == null || amount <= 0 || (typeStr != 'income' && typeStr != 'expense')) {
+        skippedRows.add(rowIndex);
+        continue;
+      }
+
       final type = typeStr == 'income' ? TransactionType.income : TransactionType.expense;
-      final amount = double.tryParse(amountStr) ?? 0.0;
 
       // Ensure category
       final lookupCat = catName.isEmpty ? 'General' : catName;
@@ -259,7 +285,7 @@ class ExportRepository {
       ));
     }
 
-    return ImportResult(count: records.length, records: records);
+    return ImportResult(count: records.length, records: records, skippedRows: skippedRows);
   }
 
   Future<void> commitImport(List<TransactionModel> records) async {
@@ -268,14 +294,15 @@ class ExportRepository {
     }
   }
 
-  DateTime _parseDate(String dateStr) {
+  DateTime? _tryParseDate(String dateStr) {
+    if (dateStr.trim().isEmpty) return null;
     try {
-      return DateFormat('d MMM yyyy', 'id_ID').parse(dateStr);
+      return DateFormat('d MMM yyyy', 'id_ID').parse(dateStr.trim());
     } catch (_) {
       try {
-        return DateTime.parse(dateStr);
+        return DateTime.parse(dateStr.trim());
       } catch (_) {
-        return DateTime.now();
+        return null;
       }
     }
   }

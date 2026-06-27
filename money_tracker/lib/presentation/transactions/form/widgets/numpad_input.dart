@@ -61,14 +61,21 @@ class _NumpadInputState extends State<NumpadInput> {
 
   void _onDigit(String digit) {
     setState(() {
+      if (digit == '.' && _display.contains('.')) {
+        return; // Only one decimal point allowed
+      }
+      if (digit != '.' && _display.replaceAll('.', '').length >= 12) {
+        return; // Max 12 digits total
+      }
+      if (_display.contains('.') && _display.split('.').last.length >= 2) {
+        return; // Limit to 2 decimal places
+      }
+
       if (_display == '0' && digit != '.') {
-        _display = digit;
-      } else if (digit == '.' && _display.contains('.')) {
-        // Don't allow multiple dots
-      } else if (_display.contains('.') &&
-          _display.split('.').last.length >= 2) {
-        // Limit to 2 decimal places
-      } else if (_display.length < 15) {
+        _display = digit; // Leading zeros stripped
+      } else if (_display == '0' && digit == '0') {
+        // Stay '0'
+      } else {
         _display += digit;
       }
     });
@@ -78,8 +85,11 @@ class _NumpadInputState extends State<NumpadInput> {
     setState(() {
       if (_display.length > 1) {
         _display = _display.substring(0, _display.length - 1);
+        if (_display == '-' || _display.isEmpty) {
+          _display = '0';
+        }
       } else {
-        _display = '0';
+        _display = '0'; // Zero amount shows "0" not ""
       }
     });
   }

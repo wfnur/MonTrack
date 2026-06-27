@@ -344,7 +344,9 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
           builder: (ctx) => AlertDialog(
             title: const Text('Ready to Import'),
             content: Text(
-              'Found ${importResult.count} transactions in document.\n\nProceeding will add all these records to your active database.',
+              importResult.skippedRows.isNotEmpty
+                  ? 'Imported ${importResult.count} rows. Skipped ${importResult.skippedRows.length} rows with invalid data.'
+                  : 'Found ${importResult.count} transactions in document.\n\nProceeding will add all these records to your active database.',
             ),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             actions: [

@@ -28,6 +28,25 @@ class PocketRepository {
     return row?.toModel();
   }
 
+  Future<PocketModel> getById(String id) async {
+    final row = await _dao.getById(id);
+    return row?.toModel() ?? _deletedWalletPlaceholder(id);
+  }
+
+  Stream<PocketModel> watchById(String id) {
+    return _dao.watchById(id).map((row) => row?.toModel() ?? _deletedWalletPlaceholder(id));
+  }
+
+  PocketModel _deletedWalletPlaceholder(String id) => PocketModel(
+        id: id,
+        name: 'Deleted wallet',
+        type: PocketType.cash,
+        balance: 0.0,
+        color: 0xFF9E9E9E,
+        icon: 'ti-wallet',
+        isDefault: false,
+      );
+
   Future<void> add(PocketModel m) => _dao.insertPocket(
         PocketsCompanion.insert(
           id: m.id,

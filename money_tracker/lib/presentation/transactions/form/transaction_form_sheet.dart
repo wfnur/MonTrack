@@ -112,6 +112,7 @@ class TransactionFormSheet extends ConsumerStatefulWidget {
 
 class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
   late TextEditingController _noteController;
+  bool _hasSubmittedWithEmptyCategory = false;
 
   @override
   void initState() {
@@ -346,6 +347,7 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
                             );
                             if (picked != null) {
                               notifier.setCategory(picked.id);
+                              setState(() => _hasSubmittedWithEmptyCategory = false);
                             }
                           },
                           borderRadius: BorderRadius.circular(14),
@@ -358,8 +360,10 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
                               border: Border.all(
                                 color: selectedCategory != null
                                     ? Color(selectedCategory.color)
-                                    : AppColors.border,
-                                width: selectedCategory != null ? 1.5 : 1.0,
+                                    : (_hasSubmittedWithEmptyCategory
+                                        ? AppColors.expense
+                                        : AppColors.border),
+                                width: selectedCategory != null || _hasSubmittedWithEmptyCategory ? 1.5 : 1.0,
                               ),
                               borderRadius: BorderRadius.circular(14),
                               color: selectedCategory != null
@@ -436,11 +440,38 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
                     _buildSectionTitle('Pocket'),
                     const SizedBox(height: 8),
                     pocketsAsync.when(
-                      data: (pockets) => PocketSelector(
-                        pockets: pockets,
-                        selectedPocketId: effectivePocketId,
-                        onPocketSelected: (id) => notifier.setPocket(id),
-                      ),
+                      data: (pockets) {
+                        if (pockets.isEmpty) {
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppColors.expense.withValues(alpha: 0.1),
+                              border: Border.all(color: AppColors.expense),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.warning_amber_rounded, color: AppColors.expense),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Please add a wallet first',
+                                    style: AppTextStyles.body.copyWith(
+                                      color: AppColors.expense,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return PocketSelector(
+                          pockets: pockets,
+                          selectedPocketId: effectivePocketId,
+                          onPocketSelected: (id) => notifier.setPocket(id),
+                        );
+                      },
                       loading: () => const SizedBox(height: 68),
                       error: (_, __) => const Text('Error loading pockets'),
                     ),
@@ -498,7 +529,9 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
                   width: double.infinity,
                   height: 54,
                   child: FilledButton(
-                    onPressed: () => _onSave(state, effectivePocketId),
+                    onPressed: pocketsAsync.value?.isEmpty == true
+                        ? null
+                        : () => _onSave(state, effectivePocketId),
                     style: FilledButton.styleFrom(
                       backgroundColor: accentColor,
                       shape: RoundedRectangleBorder(
@@ -536,11 +569,12 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
   Future<void> _onSave(TransactionFormState state, String? pocketId) async {
     if (state.amount <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter an amount greater than 0')),
+        const SnackBar(content: Text('Please enter an amount')),
       );
       return;
     }
     if (state.categoryId == null) {
+      setState(() => _hasSubmittedWithEmptyCategory = true);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please select a category')),
       );
@@ -548,7 +582,7 @@ class _TransactionFormSheetState extends ConsumerState<TransactionFormSheet> {
     }
     if (pocketId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a pocket')),
+        const SnackBar(content: Text('Please add a wallet first')),
       );
       return;
     }

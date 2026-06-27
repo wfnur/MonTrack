@@ -83,4 +83,8 @@ class TransactionRepository {
 
   Stream<double> watchTotalExpense({String? pocketId}) =>
       _dao.watchTotalByType('expense', pocketId: pocketId);
+
+  Future<int> countByPocket(String pocketId) => _dao.countByPocket(pocketId);
+
+  Future<int> countByCategory(String categoryId) => _dao.countByCategory(categoryId);
 }

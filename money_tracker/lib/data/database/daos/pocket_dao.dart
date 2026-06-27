@@ -14,6 +14,12 @@ class PocketDao extends DatabaseAccessor<AppDatabase> with _$PocketDaoMixin {
   Future<Pocket?> getDefault() =>
       (select(pockets)..where((p) => p.isDefault.equals(true))).getSingleOrNull();
 
+  Future<Pocket?> getById(String id) =>
+      (select(pockets)..where((p) => p.id.equals(id))).getSingleOrNull();
+
+  Stream<Pocket?> watchById(String id) =>
+      (select(pockets)..where((p) => p.id.equals(id))).watchSingleOrNull();
+
   Future<void> insertPocket(PocketsCompanion entry) => into(pockets).insert(entry);
 
   Future<void> updatePocket(PocketsCompanion entry) => update(pockets).replace(entry);

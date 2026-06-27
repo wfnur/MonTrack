@@ -26,3 +26,8 @@ Stream<List<PocketModel>> pocketList(PocketListRef ref) {
 Stream<PocketModel?> defaultPocket(DefaultPocketRef ref) {
   return ref.watch(pocketRepositoryProvider).watchDefault();
 }
+
+@riverpod
+Stream<PocketModel> pocketById(PocketByIdRef ref, String id) {
+  return ref.watch(pocketRepositoryProvider).watchById(id);
+}

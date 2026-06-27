@@ -453,11 +453,7 @@ class _PocketCard extends ConsumerWidget {
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
-    final txList = await ref
-        .read(transactionRepositoryProvider)
-        .watchAll(pocketId: pocket.id)
-        .first;
-    final hasTx = txList.isNotEmpty;
+    final count = await ref.read(transactionRepositoryProvider).countByPocket(pocket.id);
 
     if (!context.mounted) return;
 
@@ -466,8 +462,8 @@ class _PocketCard extends ConsumerWidget {
       builder: (ctx) => AlertDialog(
         title: const Text('Delete Wallet?'),
         content: Text(
-          hasTx
-              ? 'This wallet contains ${txList.length} transaction(s). Deleting this wallet will permanently delete all associated transactions. Are you sure you want to proceed?'
+          count > 0
+              ? 'This wallet has $count transaction(s). Deleting it will keep those transactions but they will be unlinked from any wallet. Continue?'
               : 'Are you sure you want to delete "${pocket.name}"?',
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

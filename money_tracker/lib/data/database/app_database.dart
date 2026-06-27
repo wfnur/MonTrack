@@ -87,6 +87,11 @@ class AppDatabase extends _$AppDatabase {
       await m.createAll();
       await categoryDao.insertDefaultCategories(CategorySeeds.getDefaults());
     },
+    onUpgrade: (m, from, to) async {
+      // Future schema updates: When increasing schemaVersion and adding new tables
+      // or columns, implement sequential migration logic here.
+      // Example: if (from == 1) { await m.addColumn(transactions, transactions.newColumn); }
+    },
   );
 }
 
