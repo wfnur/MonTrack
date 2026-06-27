@@ -142,11 +142,25 @@ Future<List<DailyTotal>> dailyTotals(
 
 @riverpod
 class AnalyticsDateRange extends _$AnalyticsDateRange {
+  DateTimeRange? _customRange;
+
   @override
   AnalyticsRangePreset build() => AnalyticsRangePreset.thisMonth;
 
-  DateTimeRange get range => state.toDateTimeRange();
+  DateTimeRange get range {
+    if (state == AnalyticsRangePreset.custom && _customRange != null) {
+      return _customRange!;
+    }
+    return state.toDateTimeRange();
+  }
+
   void set(AnalyticsRangePreset p) => state = p;
+
+  void setCustom(DateTimeRange customRange) {
+    _customRange = customRange;
+    ref.notifyListeners();
+    state = AnalyticsRangePreset.custom;
+  }
 }
 
 enum AnalyticsRangePreset {
