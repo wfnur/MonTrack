@@ -25,6 +25,20 @@ class TransactionRepository {
         .map((rows) => rows.map((r) => r.toModel()).toList());
   }
 
+  Future<List<TransactionModel>> getAll({
+    String? pocketId,
+    String? categoryId,
+    TransactionType? type,
+    DateTimeRange? range,
+  }) async {
+    return watchAll(
+      pocketId: pocketId,
+      categoryId: categoryId,
+      type: type,
+      range: range,
+    ).first;
+  }
+
   Future<TransactionModel?> getById(String id) async {
     final row = await _dao.getById(id);
     return row?.toModel();

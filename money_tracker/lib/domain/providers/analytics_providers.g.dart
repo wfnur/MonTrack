@@ -6,7 +6,7 @@ part of 'analytics_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$expenseByCategoryHash() => r'd2b2a46304927278e0701a46f39b0203fb40f29b';
+String _$categoryTotalsHash() => r'1a20d09720a08e5ba8767d423ebe0eb24a9b5a0c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,25 +29,28 @@ class _SystemHash {
   }
 }
 
-/// See also [expenseByCategory].
-@ProviderFor(expenseByCategory)
-const expenseByCategoryProvider = ExpenseByCategoryFamily();
+/// See also [categoryTotals].
+@ProviderFor(categoryTotals)
+const categoryTotalsProvider = CategoryTotalsFamily();
 
-/// See also [expenseByCategory].
-class ExpenseByCategoryFamily extends Family<AsyncValue<Map<String, double>>> {
-  /// See also [expenseByCategory].
-  const ExpenseByCategoryFamily();
+/// See also [categoryTotals].
+class CategoryTotalsFamily extends Family<AsyncValue<List<CategoryTotal>>> {
+  /// See also [categoryTotals].
+  const CategoryTotalsFamily();
 
-  /// See also [expenseByCategory].
-  ExpenseByCategoryProvider call(DateTimeRange<DateTime> range) {
-    return ExpenseByCategoryProvider(range);
+  /// See also [categoryTotals].
+  CategoryTotalsProvider call(
+    TransactionType type,
+    DateTimeRange<DateTime> range,
+  ) {
+    return CategoryTotalsProvider(type, range);
   }
 
   @override
-  ExpenseByCategoryProvider getProviderOverride(
-    covariant ExpenseByCategoryProvider provider,
+  CategoryTotalsProvider getProviderOverride(
+    covariant CategoryTotalsProvider provider,
   ) {
-    return call(provider.range);
+    return call(provider.type, provider.range);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -62,70 +65,77 @@ class ExpenseByCategoryFamily extends Family<AsyncValue<Map<String, double>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'expenseByCategoryProvider';
+  String? get name => r'categoryTotalsProvider';
 }
 
-/// See also [expenseByCategory].
-class ExpenseByCategoryProvider
-    extends AutoDisposeStreamProvider<Map<String, double>> {
-  /// See also [expenseByCategory].
-  ExpenseByCategoryProvider(DateTimeRange<DateTime> range)
+/// See also [categoryTotals].
+class CategoryTotalsProvider
+    extends AutoDisposeFutureProvider<List<CategoryTotal>> {
+  /// See also [categoryTotals].
+  CategoryTotalsProvider(TransactionType type, DateTimeRange<DateTime> range)
     : this._internal(
-        (ref) => expenseByCategory(ref as ExpenseByCategoryRef, range),
-        from: expenseByCategoryProvider,
-        name: r'expenseByCategoryProvider',
+        (ref) => categoryTotals(ref as CategoryTotalsRef, type, range),
+        from: categoryTotalsProvider,
+        name: r'categoryTotalsProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
             ? null
-            : _$expenseByCategoryHash,
-        dependencies: ExpenseByCategoryFamily._dependencies,
+            : _$categoryTotalsHash,
+        dependencies: CategoryTotalsFamily._dependencies,
         allTransitiveDependencies:
-            ExpenseByCategoryFamily._allTransitiveDependencies,
+            CategoryTotalsFamily._allTransitiveDependencies,
+        type: type,
         range: range,
       );
 
-  ExpenseByCategoryProvider._internal(
+  CategoryTotalsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
+    required this.type,
     required this.range,
   }) : super.internal();
 
+  final TransactionType type;
   final DateTimeRange<DateTime> range;
 
   @override
   Override overrideWith(
-    Stream<Map<String, double>> Function(ExpenseByCategoryRef provider) create,
+    FutureOr<List<CategoryTotal>> Function(CategoryTotalsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: ExpenseByCategoryProvider._internal(
-        (ref) => create(ref as ExpenseByCategoryRef),
+      override: CategoryTotalsProvider._internal(
+        (ref) => create(ref as CategoryTotalsRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
+        type: type,
         range: range,
       ),
     );
   }
 
   @override
-  AutoDisposeStreamProviderElement<Map<String, double>> createElement() {
-    return _ExpenseByCategoryProviderElement(this);
+  AutoDisposeFutureProviderElement<List<CategoryTotal>> createElement() {
+    return _CategoryTotalsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ExpenseByCategoryProvider && other.range == range;
+    return other is CategoryTotalsProvider &&
+        other.type == type &&
+        other.range == range;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, type.hashCode);
     hash = _SystemHash.combine(hash, range.hashCode);
 
     return _SystemHash.finish(hash);
@@ -134,23 +144,26 @@ class ExpenseByCategoryProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin ExpenseByCategoryRef
-    on AutoDisposeStreamProviderRef<Map<String, double>> {
+mixin CategoryTotalsRef on AutoDisposeFutureProviderRef<List<CategoryTotal>> {
+  /// The parameter `type` of this provider.
+  TransactionType get type;
+
   /// The parameter `range` of this provider.
   DateTimeRange<DateTime> get range;
 }
 
-class _ExpenseByCategoryProviderElement
-    extends AutoDisposeStreamProviderElement<Map<String, double>>
-    with ExpenseByCategoryRef {
-  _ExpenseByCategoryProviderElement(super.provider);
+class _CategoryTotalsProviderElement
+    extends AutoDisposeFutureProviderElement<List<CategoryTotal>>
+    with CategoryTotalsRef {
+  _CategoryTotalsProviderElement(super.provider);
 
   @override
-  DateTimeRange<DateTime> get range =>
-      (origin as ExpenseByCategoryProvider).range;
+  TransactionType get type => (origin as CategoryTotalsProvider).type;
+  @override
+  DateTimeRange<DateTime> get range => (origin as CategoryTotalsProvider).range;
 }
 
-String _$monthlyTotalsHash() => r'6db807ae01cbc28c9f451613f3b79b6316b2be5c';
+String _$monthlyTotalsHash() => r'4031b467d7107d3d253bf4f938701424b741379d';
 
 /// See also [monthlyTotals].
 @ProviderFor(monthlyTotals)
@@ -162,15 +175,15 @@ class MonthlyTotalsFamily extends Family<AsyncValue<List<MonthlyTotal>>> {
   const MonthlyTotalsFamily();
 
   /// See also [monthlyTotals].
-  MonthlyTotalsProvider call(int year) {
-    return MonthlyTotalsProvider(year);
+  MonthlyTotalsProvider call(int year, String? pocketId) {
+    return MonthlyTotalsProvider(year, pocketId);
   }
 
   @override
   MonthlyTotalsProvider getProviderOverride(
     covariant MonthlyTotalsProvider provider,
   ) {
-    return call(provider.year);
+    return call(provider.year, provider.pocketId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -190,11 +203,11 @@ class MonthlyTotalsFamily extends Family<AsyncValue<List<MonthlyTotal>>> {
 
 /// See also [monthlyTotals].
 class MonthlyTotalsProvider
-    extends AutoDisposeStreamProvider<List<MonthlyTotal>> {
+    extends AutoDisposeFutureProvider<List<MonthlyTotal>> {
   /// See also [monthlyTotals].
-  MonthlyTotalsProvider(int year)
+  MonthlyTotalsProvider(int year, String? pocketId)
     : this._internal(
-        (ref) => monthlyTotals(ref as MonthlyTotalsRef, year),
+        (ref) => monthlyTotals(ref as MonthlyTotalsRef, year, pocketId),
         from: monthlyTotalsProvider,
         name: r'monthlyTotalsProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -204,6 +217,7 @@ class MonthlyTotalsProvider
         allTransitiveDependencies:
             MonthlyTotalsFamily._allTransitiveDependencies,
         year: year,
+        pocketId: pocketId,
       );
 
   MonthlyTotalsProvider._internal(
@@ -214,13 +228,15 @@ class MonthlyTotalsProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.year,
+    required this.pocketId,
   }) : super.internal();
 
   final int year;
+  final String? pocketId;
 
   @override
   Override overrideWith(
-    Stream<List<MonthlyTotal>> Function(MonthlyTotalsRef provider) create,
+    FutureOr<List<MonthlyTotal>> Function(MonthlyTotalsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -232,24 +248,28 @@ class MonthlyTotalsProvider
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         year: year,
+        pocketId: pocketId,
       ),
     );
   }
 
   @override
-  AutoDisposeStreamProviderElement<List<MonthlyTotal>> createElement() {
+  AutoDisposeFutureProviderElement<List<MonthlyTotal>> createElement() {
     return _MonthlyTotalsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is MonthlyTotalsProvider && other.year == year;
+    return other is MonthlyTotalsProvider &&
+        other.year == year &&
+        other.pocketId == pocketId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, year.hashCode);
+    hash = _SystemHash.combine(hash, pocketId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -257,19 +277,175 @@ class MonthlyTotalsProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin MonthlyTotalsRef on AutoDisposeStreamProviderRef<List<MonthlyTotal>> {
+mixin MonthlyTotalsRef on AutoDisposeFutureProviderRef<List<MonthlyTotal>> {
   /// The parameter `year` of this provider.
   int get year;
+
+  /// The parameter `pocketId` of this provider.
+  String? get pocketId;
 }
 
 class _MonthlyTotalsProviderElement
-    extends AutoDisposeStreamProviderElement<List<MonthlyTotal>>
+    extends AutoDisposeFutureProviderElement<List<MonthlyTotal>>
     with MonthlyTotalsRef {
   _MonthlyTotalsProviderElement(super.provider);
 
   @override
   int get year => (origin as MonthlyTotalsProvider).year;
+  @override
+  String? get pocketId => (origin as MonthlyTotalsProvider).pocketId;
 }
 
+String _$dailyTotalsHash() => r'6d34b91655fbff408777dd0a5cfe20d697314fcb';
+
+/// See also [dailyTotals].
+@ProviderFor(dailyTotals)
+const dailyTotalsProvider = DailyTotalsFamily();
+
+/// See also [dailyTotals].
+class DailyTotalsFamily extends Family<AsyncValue<List<DailyTotal>>> {
+  /// See also [dailyTotals].
+  const DailyTotalsFamily();
+
+  /// See also [dailyTotals].
+  DailyTotalsProvider call(DateTimeRange<DateTime> range, String? pocketId) {
+    return DailyTotalsProvider(range, pocketId);
+  }
+
+  @override
+  DailyTotalsProvider getProviderOverride(
+    covariant DailyTotalsProvider provider,
+  ) {
+    return call(provider.range, provider.pocketId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'dailyTotalsProvider';
+}
+
+/// See also [dailyTotals].
+class DailyTotalsProvider extends AutoDisposeFutureProvider<List<DailyTotal>> {
+  /// See also [dailyTotals].
+  DailyTotalsProvider(DateTimeRange<DateTime> range, String? pocketId)
+    : this._internal(
+        (ref) => dailyTotals(ref as DailyTotalsRef, range, pocketId),
+        from: dailyTotalsProvider,
+        name: r'dailyTotalsProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$dailyTotalsHash,
+        dependencies: DailyTotalsFamily._dependencies,
+        allTransitiveDependencies: DailyTotalsFamily._allTransitiveDependencies,
+        range: range,
+        pocketId: pocketId,
+      );
+
+  DailyTotalsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.range,
+    required this.pocketId,
+  }) : super.internal();
+
+  final DateTimeRange<DateTime> range;
+  final String? pocketId;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<DailyTotal>> Function(DailyTotalsRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: DailyTotalsProvider._internal(
+        (ref) => create(ref as DailyTotalsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        range: range,
+        pocketId: pocketId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<List<DailyTotal>> createElement() {
+    return _DailyTotalsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DailyTotalsProvider &&
+        other.range == range &&
+        other.pocketId == pocketId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, range.hashCode);
+    hash = _SystemHash.combine(hash, pocketId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin DailyTotalsRef on AutoDisposeFutureProviderRef<List<DailyTotal>> {
+  /// The parameter `range` of this provider.
+  DateTimeRange<DateTime> get range;
+
+  /// The parameter `pocketId` of this provider.
+  String? get pocketId;
+}
+
+class _DailyTotalsProviderElement
+    extends AutoDisposeFutureProviderElement<List<DailyTotal>>
+    with DailyTotalsRef {
+  _DailyTotalsProviderElement(super.provider);
+
+  @override
+  DateTimeRange<DateTime> get range => (origin as DailyTotalsProvider).range;
+  @override
+  String? get pocketId => (origin as DailyTotalsProvider).pocketId;
+}
+
+String _$analyticsDateRangeHash() =>
+    r'4de9a98738be270bb877406bf7daf5a7c064ca05';
+
+/// See also [AnalyticsDateRange].
+@ProviderFor(AnalyticsDateRange)
+final analyticsDateRangeProvider =
+    AutoDisposeNotifierProvider<
+      AnalyticsDateRange,
+      AnalyticsRangePreset
+    >.internal(
+      AnalyticsDateRange.new,
+      name: r'analyticsDateRangeProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$analyticsDateRangeHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$AnalyticsDateRange = AutoDisposeNotifier<AnalyticsRangePreset>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
