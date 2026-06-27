@@ -6,7 +6,7 @@ part of 'pocket_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'c106396ca9ffc6af1d50cbfae4044b36ea4445e6';
+String _$appDatabaseHash() => r'fee633a23e9de804d9e8f2cbb3f2c3829bc4f1de';
 
 /// See also [appDatabase].
 @ProviderFor(appDatabase)

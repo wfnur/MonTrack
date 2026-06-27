@@ -14,11 +14,12 @@ part 'app_database.g.dart';
 
 class Transactions extends Table {
   TextColumn get id => text()();
-  TextColumn get type => text()();          // 'income' or 'expense'
+  TextColumn get type => text()(); // 'income' or 'expense'
   RealColumn get amount => real()();
   DateTimeColumn get date => dateTime()();
   TextColumn get categoryId => text()();
-  TextColumn get labelIds => text().withDefault(const Constant('[]'))();  // JSON array
+  TextColumn get labelIds =>
+      text().withDefault(const Constant('[]'))(); // JSON array
   TextColumn get note => text().nullable()();
   TextColumn get pocketId => text()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -30,9 +31,9 @@ class Transactions extends Table {
 class Categories extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
-  TextColumn get icon => text()();          // icon name string
-  IntColumn get color => integer()();       // ARGB int
-  TextColumn get type => text()();          // 'income', 'expense', or 'both'
+  TextColumn get icon => text()(); // icon name string
+  IntColumn get color => integer()(); // ARGB int
+  TextColumn get type => text()(); // 'income', 'expense', or 'both'
   BoolColumn get isDefault => boolean().withDefault(const Constant(false))();
   IntColumn get sortOrder => integer().withDefault(const Constant(0))();
 
@@ -43,7 +44,7 @@ class Categories extends Table {
 class Labels extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
-  IntColumn get color => integer()();       // ARGB int
+  IntColumn get color => integer()(); // ARGB int
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
@@ -53,7 +54,7 @@ class Labels extends Table {
 class Pockets extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
-  TextColumn get type => text()();          // 'cash', 'bank', 'ewallet', 'credit'
+  TextColumn get type => text()(); // 'cash', 'bank', 'ewallet', 'credit'
   RealColumn get balance => real().withDefault(const Constant(0.0))();
   IntColumn get color => integer()();
   TextColumn get icon => text()();
@@ -82,11 +83,11 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) async {
-          await m.createAll();
-          await categoryDao.insertDefaultCategories(CategorySeeds.getDefaults());
-        },
-      );
+    onCreate: (m) async {
+      await m.createAll();
+      await categoryDao.insertDefaultCategories(CategorySeeds.getDefaults());
+    },
+  );
 }
 
 AppDatabase? _db;
