@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -8,6 +9,7 @@ import 'domain/providers/settings_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID', null);
   final prefs = await SharedPreferences.getInstance();
   final savedCurrency = prefs.getString('selected_currency') ?? 'IDR';
   CurrencyFormatter.setCurrency(savedCurrency);

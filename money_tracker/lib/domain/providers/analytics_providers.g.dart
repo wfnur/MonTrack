@@ -428,7 +428,7 @@ class _DailyTotalsProviderElement
 }
 
 String _$analyticsDateRangeHash() =>
-    r'4de9a98738be270bb877406bf7daf5a7c064ca05';
+    r'79242934fe4687d373640690f289e63afd2d18cb';
 
 /// See also [AnalyticsDateRange].
 @ProviderFor(AnalyticsDateRange)
