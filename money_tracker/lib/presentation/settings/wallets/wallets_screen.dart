@@ -7,6 +7,8 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../../../data/models/pocket_model.dart';
 import '../../../../domain/providers/pocket_providers.dart';
 import '../../../../domain/providers/transaction_providers.dart';
+import '../../common/empty_state.dart';
+import '../../common/shimmer_list.dart';
 import 'wallet_form_sheet.dart';
 
 class WalletsScreen extends ConsumerWidget {
@@ -17,12 +19,12 @@ class WalletsScreen extends ConsumerWidget {
     final pocketsAsync = ref.watch(pocketListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.colorBackground,
         title: Text(
           'Wallets',
-          style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.title.copyWith(color: context.colorTextPrimary),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -130,7 +132,7 @@ class WalletsScreen extends ConsumerWidget {
             ],
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const ShimmerList(itemCount: 4),
         error: (err, _) => Center(
           child: Text(
             'Error loading wallets: $err',
@@ -142,32 +144,19 @@ class WalletsScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.account_balance_wallet_outlined,
-            size: 64,
-            color: AppColors.textSecondary.withValues(alpha: 0.4),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No wallets found',
-            style: AppTextStyles.title.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Create your first wallet to track accounts',
-            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: () => WalletFormSheet.show(context),
-            icon: const Icon(Icons.add),
-            label: const Text('Add Wallet'),
-          ),
-        ],
+    return EmptyState(
+      icon: '👛',
+      title: 'No wallets yet',
+      subtitle: 'Add your first wallet to get started',
+      action: ElevatedButton(
+        onPressed: () => WalletFormSheet.show(context),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.colorPrimary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        ),
+        child: const Text('Add Wallet'),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
+import '../../common/empty_state.dart';
+import '../../common/shimmer_list.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../../core/utils/date_formatter.dart';
@@ -57,7 +58,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           }
           return _buildGroupedList(filtered, categoryMap.value ?? {});
         },
-        loading: () => _buildShimmer(),
+        loading: () => const ShimmerList(itemCount: 8),
         error: (error, _) => Center(
           child: Text(
             'Error: $error',
@@ -226,107 +227,47 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.receipt_long_outlined,
-            size: 64,
-            color: context.colorTextSecondary.withValues(alpha: 0.4),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            _searchQuery.isNotEmpty
-                ? 'No transactions found'
-                : 'No transactions yet',
-            style: AppTextStyles.title.copyWith(
-              color: context.colorTextSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _searchQuery.isNotEmpty
-                ? 'Try a different search term'
-                : 'Tap + to add your first transaction',
-            style: AppTextStyles.caption.copyWith(
-              color: context.colorTextSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+    final filter = ref.watch(transactionFilterProvider);
+    final isFiltering = _searchQuery.isNotEmpty || filter != const TransactionFilterState();
 
-  Widget _buildShimmer() {
-    return Shimmer.fromColors(
-      baseColor: context.colorBorder,
-      highlightColor: context.colorSurface,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(20),
-        itemCount: 8,
-        itemBuilder: (_, __) => Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: context.colorSurface,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 140,
-                      height: 14,
-                      decoration: BoxDecoration(
-                        color: context.colorSurface,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      width: 90,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: context.colorSurface,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    width: 80,
-                    height: 14,
-                    decoration: BoxDecoration(
-                      color: context.colorSurface,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: 50,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: context.colorSurface,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+    if (isFiltering) {
+      return EmptyState(
+        icon: '🔍',
+        title: 'No results found',
+        subtitle: 'Try adjusting your search or filters',
+        action: TextButton(
+          onPressed: () {
+            setState(() {
+              _isSearching = false;
+              _searchQuery = '';
+              _searchController.clear();
+            });
+            ref.read(transactionFilterProvider.notifier).reset();
+          },
+          child: Text(
+            'Reset Filters',
+            style: AppTextStyles.body.copyWith(
+              color: context.colorPrimary,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
+      );
+    }
+
+    return EmptyState(
+      icon: '💸',
+      title: 'No transactions yet',
+      subtitle: 'Tap + to add your first income or expense',
+      action: ElevatedButton(
+        onPressed: () => TransactionFormSheet.show(context),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: context.colorPrimary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        ),
+        child: const Text('Add Transaction'),
       ),
     );
   }

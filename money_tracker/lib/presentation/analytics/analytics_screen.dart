@@ -8,6 +8,8 @@ import 'widgets/summary_cards.dart';
 import 'widgets/pie_chart_card.dart';
 import 'widgets/bar_chart_card.dart';
 import 'widgets/line_chart_card.dart';
+import '../common/empty_state.dart';
+import '../common/shimmer_list.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({super.key});
@@ -101,36 +103,47 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 3. Summary cards row
+            // 3. Summary cards row & charts
             dailyTotalsAsync.when(
               data: (dailyList) {
                 final totalInc = dailyList.fold(0.0, (sum, item) => sum + item.income);
                 final totalExp = dailyList.fold(0.0, (sum, item) => sum + item.expense);
-                return SummaryCards(totalIncome: totalInc, totalExpense: totalExp);
+                if (dailyList.isEmpty || (totalInc == 0 && totalExp == 0)) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: EmptyState(
+                      icon: '📊',
+                      title: 'No data for this period',
+                      subtitle: 'Add transactions to see your analytics',
+                    ),
+                  );
+                }
+                return Column(
+                  children: [
+                    SummaryCards(totalIncome: totalInc, totalExpense: totalExp),
+                    const SizedBox(height: 24),
+                    PieChartCard(
+                      type: _selectedType,
+                      range: activeRange,
+                    ),
+                    const SizedBox(height: 24),
+                    BarChartCard(
+                      year: activeRange.start.year,
+                      pocketId: _selectedPocketId,
+                    ),
+                    const SizedBox(height: 24),
+                    LineChartCard(
+                      range: activeRange,
+                      pocketId: _selectedPocketId,
+                    ),
+                  ],
+                );
               },
-              loading: () => const SummaryCards(totalIncome: 0, totalExpense: 0),
-              error: (_, __) => const SummaryCards(totalIncome: 0, totalExpense: 0),
-            ),
-            const SizedBox(height: 24),
-
-            // 4. PieChartCard
-            PieChartCard(
-              type: _selectedType,
-              range: activeRange,
-            ),
-            const SizedBox(height: 24),
-
-            // 5. BarChartCard
-            BarChartCard(
-              year: activeRange.start.year,
-              pocketId: _selectedPocketId,
-            ),
-            const SizedBox(height: 24),
-
-            // 6. LineChartCard
-            LineChartCard(
-              range: activeRange,
-              pocketId: _selectedPocketId,
+              loading: () => const Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: ShimmerList(itemCount: 4),
+              ),
+              error: (e, _) => Center(child: Text('Error: $e')),
             ),
           ],
         ),
