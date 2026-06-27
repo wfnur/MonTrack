@@ -45,7 +45,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       appBar: _buildAppBar(),
       endDrawer: const FilterDrawer(),
       body: transactionsAsync.when(
@@ -71,7 +71,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
   PreferredSizeWidget _buildAppBar() {
     if (_isSearching) {
       return AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.colorBackground,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
@@ -88,12 +88,12 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           decoration: InputDecoration(
             hintText: 'Search transactions...',
             hintStyle: AppTextStyles.body.copyWith(
-              color: AppColors.textSecondary,
+              color: context.colorTextSecondary,
             ),
             border: InputBorder.none,
           ),
           style: AppTextStyles.body.copyWith(
-            color: AppColors.textPrimary,
+            color: context.colorTextPrimary,
           ),
           onChanged: (value) {
             setState(() => _searchQuery = value.toLowerCase());
@@ -113,11 +113,11 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
     }
 
     return AppBar(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       title: Text(
         'Transactions',
         style: AppTextStyles.title.copyWith(
-          color: AppColors.textPrimary,
+          color: context.colorTextPrimary,
         ),
       ),
       actions: [
@@ -179,7 +179,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 header,
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textSecondary,
+                  color: context.colorTextSecondary,
                   fontSize: 12,
                   letterSpacing: 0.5,
                 ),
@@ -233,7 +233,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
           Icon(
             Icons.receipt_long_outlined,
             size: 64,
-            color: AppColors.textSecondary.withValues(alpha: 0.4),
+            color: context.colorTextSecondary.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(
@@ -241,7 +241,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 ? 'No transactions found'
                 : 'No transactions yet',
             style: AppTextStyles.title.copyWith(
-              color: AppColors.textSecondary,
+              color: context.colorTextSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -250,7 +250,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 ? 'Try a different search term'
                 : 'Tap + to add your first transaction',
             style: AppTextStyles.caption.copyWith(
-              color: AppColors.textSecondary,
+              color: context.colorTextSecondary,
             ),
           ),
         ],
@@ -260,8 +260,8 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
 
   Widget _buildShimmer() {
     return Shimmer.fromColors(
-      baseColor: AppColors.border,
-      highlightColor: AppColors.surface,
+      baseColor: context.colorBorder,
+      highlightColor: context.colorSurface,
       child: ListView.builder(
         padding: const EdgeInsets.all(20),
         itemCount: 8,
@@ -273,7 +273,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colorSurface,
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
@@ -286,7 +286,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       width: 140,
                       height: 14,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.colorSurface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -295,7 +295,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                       width: 90,
                       height: 10,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.colorSurface,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -309,7 +309,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     width: 80,
                     height: 14,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colorSurface,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -318,7 +318,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                     width: 50,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.colorSurface,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),

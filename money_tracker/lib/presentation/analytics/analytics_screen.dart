@@ -29,12 +29,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final dailyTotalsAsync = ref.watch(dailyTotalsProvider(activeRange, _selectedPocketId));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.colorBackground,
         title: Text(
           'Analytics',
-          style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.title.copyWith(color: context.colorTextPrimary),
         ),
       ),
       body: SingleChildScrollView(
@@ -146,16 +146,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       onSelected: (_) {
         ref.read(analyticsDateRangeProvider.notifier).set(preset);
       },
-      selectedColor: AppColors.primarySurface,
-      checkmarkColor: AppColors.primary,
+      selectedColor: context.colorPrimarySurface,
+      checkmarkColor: context.colorPrimary,
       labelStyle: AppTextStyles.caption.copyWith(
-        color: isSelected ? AppColors.primary : AppColors.textPrimary,
+        color: isSelected ? context.colorPrimary : context.colorTextPrimary,
         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? AppColors.primary : AppColors.border,
+          color: isSelected ? context.colorPrimary : context.colorBorder,
         ),
       ),
     );
@@ -180,8 +180,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             return Theme(
               data: Theme.of(context).copyWith(
                 colorScheme: ColorScheme.fromSeed(
-                  seedColor: AppColors.primary,
-                  surface: AppColors.surface,
+                  seedColor: context.colorPrimary,
+                  brightness: Theme.of(context).brightness,
+                  surface: context.colorSurface,
                 ),
               ),
               child: child!,
@@ -193,16 +194,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           ref.read(analyticsDateRangeProvider.notifier).setCustom(picked);
         }
       },
-      selectedColor: AppColors.primarySurface,
-      checkmarkColor: AppColors.primary,
+      selectedColor: context.colorPrimarySurface,
+      checkmarkColor: context.colorPrimary,
       labelStyle: AppTextStyles.caption.copyWith(
-        color: isSelected ? AppColors.primary : AppColors.textPrimary,
+        color: isSelected ? context.colorPrimary : context.colorTextPrimary,
         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
       ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(
-          color: isSelected ? AppColors.primary : AppColors.border,
+          color: isSelected ? context.colorPrimary : context.colorBorder,
         ),
       ),
     );

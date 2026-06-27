@@ -24,9 +24,9 @@ class LineChartCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,15 +37,15 @@ class LineChartCard extends ConsumerWidget {
               Text(
                 'Cash Flow Trend',
                 style: AppTextStyles.title.copyWith(
-                  color: AppColors.textPrimary,
+                  color: context.colorTextPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Row(
                 children: [
-                  _buildLegendDot('Income', AppColors.income),
+                  _buildLegendDot(context, 'Income', AppColors.income),
                   const SizedBox(width: 12),
-                  _buildLegendDot('Expense', AppColors.expense),
+                  _buildLegendDot(context, 'Expense', AppColors.expense),
                 ],
               ),
             ],
@@ -59,7 +59,7 @@ class LineChartCard extends ConsumerWidget {
               });
 
               if (maxY == 0) {
-                return _buildNoData();
+                return _buildNoData(context);
               }
 
               final incomeSpots = <FlSpot>[];
@@ -83,7 +83,7 @@ class LineChartCard extends ConsumerWidget {
                       show: true,
                       drawVerticalLine: false,
                       getDrawingHorizontalLine: (val) => FlLine(
-                        color: AppColors.border.withValues(alpha: 0.5),
+                        color: context.colorBorder.withValues(alpha: 0.5),
                         strokeWidth: 1,
                       ),
                     ),
@@ -103,7 +103,7 @@ class LineChartCard extends ConsumerWidget {
                               child: Text(
                                 CurrencyFormatter.formatCompact(value),
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: context.colorTextSecondary,
                                   fontSize: 10,
                                 ),
                                 textAlign: TextAlign.right,
@@ -125,7 +125,7 @@ class LineChartCard extends ConsumerWidget {
                               child: Text(
                                 DateFormat('d MMM').format(totals[idx].date),
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: context.colorTextSecondary,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -196,14 +196,14 @@ class LineChartCard extends ConsumerWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
-            error: (err, _) => _buildNoData(),
+            error: (err, _) => _buildNoData(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLegendDot(String label, Color color) {
+  Widget _buildLegendDot(BuildContext context, String label, Color color) {
     return Row(
       children: [
         Container(
@@ -215,7 +215,7 @@ class LineChartCard extends ConsumerWidget {
         Text(
           label,
           style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
+            color: context.colorTextSecondary,
             fontWeight: FontWeight.w600,
             fontSize: 11,
           ),
@@ -224,18 +224,18 @@ class LineChartCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildNoData() {
+  Widget _buildNoData(BuildContext context) {
     return Container(
       height: 180,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.show_chart_rounded, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+          Icon(Icons.show_chart_rounded, size: 48, color: context.colorTextSecondary.withValues(alpha: 0.4)),
           const SizedBox(height: 12),
           Text(
             'No daily flow data available',
-            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.caption.copyWith(color: context.colorTextSecondary),
           ),
         ],
       ),

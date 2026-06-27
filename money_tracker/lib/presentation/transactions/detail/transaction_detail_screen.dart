@@ -23,12 +23,12 @@ class TransactionDetailScreen extends ConsumerWidget {
     final transactionAsync = ref.watch(transactionByIdProvider(id));
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: context.colorBackground,
         title: Text(
           'Transaction Detail',
-          style: AppTextStyles.title.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.title.copyWith(color: context.colorTextPrimary),
         ),
         actions: transactionAsync.valueOrNull != null
             ? [
@@ -46,7 +46,7 @@ class TransactionDetailScreen extends ConsumerWidget {
       body: transactionAsync.when(
         data: (tx) {
           if (tx == null) {
-            return _buildNotFound();
+            return _buildNotFound(context);
           }
           return _buildContent(context, ref, tx);
         },
@@ -61,7 +61,7 @@ class TransactionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildNotFound() {
+  Widget _buildNotFound(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -69,12 +69,12 @@ class TransactionDetailScreen extends ConsumerWidget {
           Icon(
             Icons.receipt_long_outlined,
             size: 64,
-            color: AppColors.textSecondary.withValues(alpha: 0.4),
+            color: context.colorTextSecondary.withValues(alpha: 0.4),
           ),
           const SizedBox(height: 16),
           Text(
             'Transaction not found',
-            style: AppTextStyles.title.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.title.copyWith(color: context.colorTextSecondary),
           ),
         ],
       ),
@@ -112,9 +112,9 @@ class TransactionDetailScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AppColors.surface,
+              color: context.colorSurface,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: context.colorBorder),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.03),
@@ -161,19 +161,20 @@ class TransactionDetailScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Divider(color: AppColors.border, height: 1),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Divider(color: context.colorBorder, height: 1),
                 ),
 
                 // Info Rows
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.calendar_today_rounded,
                   label: 'Date',
                   content: Text(
                     DateFormatter.format(tx.date),
                     style: AppTextStyles.body.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.colorTextPrimary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -181,6 +182,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 18),
 
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.category_outlined,
                   label: 'Category',
                   content: Row(
@@ -205,7 +207,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       Text(
                         categoryName,
                         style: AppTextStyles.body.copyWith(
-                          color: AppColors.textPrimary,
+                          color: context.colorTextPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -215,6 +217,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 18),
 
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.account_balance_wallet_outlined,
                   label: 'Pocket',
                   content: Row(
@@ -231,7 +234,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                       Text(
                         pocket?.name ?? 'Unknown Pocket',
                         style: AppTextStyles.body.copyWith(
-                          color: AppColors.textPrimary,
+                          color: context.colorTextPrimary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -241,6 +244,7 @@ class TransactionDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 18),
 
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.label_outline_rounded,
                   label: 'Labels',
                   content: matchingLabels.isNotEmpty
@@ -271,13 +275,14 @@ class TransactionDetailScreen extends ConsumerWidget {
                       : Text(
                           'None',
                           style: AppTextStyles.body.copyWith(
-                            color: AppColors.textSecondary,
+                            color: context.colorTextSecondary,
                           ),
                         ),
                 ),
                 const SizedBox(height: 18),
 
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.notes_rounded,
                   label: 'Note',
                   content: Text(
@@ -286,8 +291,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                         : 'No note',
                     style: AppTextStyles.body.copyWith(
                       color: tx.note != null && tx.note!.isNotEmpty
-                          ? AppColors.textPrimary
-                          : AppColors.textSecondary,
+                          ? context.colorTextPrimary
+                          : context.colorTextSecondary,
                       fontStyle: tx.note != null && tx.note!.isNotEmpty
                           ? FontStyle.normal
                           : FontStyle.italic,
@@ -297,12 +302,13 @@ class TransactionDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 18),
 
                 _buildInfoRow(
+                  context: context,
                   icon: Icons.access_time_rounded,
                   label: 'Created at',
                   content: Text(
                     '${DateFormatter.formatShort(tx.createdAt)} ${_formatTime(tx.createdAt)}',
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.textSecondary,
+                      color: context.colorTextSecondary,
                     ),
                   ),
                 ),
@@ -325,8 +331,8 @@ class TransactionDetailScreen extends ConsumerWidget {
                 ),
               ),
               style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.textPrimary,
-                side: const BorderSide(color: AppColors.border),
+                foregroundColor: context.colorTextPrimary,
+                side: BorderSide(color: context.colorBorder),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -339,6 +345,7 @@ class TransactionDetailScreen extends ConsumerWidget {
   }
 
   Widget _buildInfoRow({
+    required BuildContext context,
     required IconData icon,
     required String label,
     required Widget content,
@@ -346,13 +353,13 @@ class TransactionDetailScreen extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: AppColors.textSecondary),
+        Icon(icon, size: 20, color: context.colorTextSecondary),
         const SizedBox(width: 12),
         SizedBox(
           width: 85,
           child: Text(
             label,
-            style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.body.copyWith(color: context.colorTextSecondary),
           ),
         ),
         Expanded(
@@ -395,7 +402,7 @@ class TransactionDetailScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(ctx),
             child: Text(
               'Cancel',
-              style: AppTextStyles.body.copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.body.copyWith(color: context.colorTextSecondary),
             ),
           ),
           TextButton(

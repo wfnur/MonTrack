@@ -28,9 +28,9 @@ class BarChartCard extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,15 +41,15 @@ class BarChartCard extends ConsumerWidget {
               Text(
                 'Monthly Overview ($year)',
                 style: AppTextStyles.title.copyWith(
-                  color: AppColors.textPrimary,
+                  color: context.colorTextPrimary,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               Row(
                 children: [
-                  _buildLegendDot('Income', AppColors.income),
+                  _buildLegendDot(context, 'Income', AppColors.income),
                   const SizedBox(width: 12),
-                  _buildLegendDot('Expense', AppColors.expense),
+                  _buildLegendDot(context, 'Expense', AppColors.expense),
                 ],
               ),
             ],
@@ -63,7 +63,7 @@ class BarChartCard extends ConsumerWidget {
               });
 
               if (maxY == 0) {
-                return _buildNoData();
+                return _buildNoData(context);
               }
 
               return SizedBox(
@@ -75,7 +75,7 @@ class BarChartCard extends ConsumerWidget {
                       show: true,
                       drawVerticalLine: false,
                       getDrawingHorizontalLine: (val) => FlLine(
-                        color: AppColors.border.withValues(alpha: 0.5),
+                        color: context.colorBorder.withValues(alpha: 0.5),
                         strokeWidth: 1,
                       ),
                     ),
@@ -95,7 +95,7 @@ class BarChartCard extends ConsumerWidget {
                               child: Text(
                                 CurrencyFormatter.formatCompact(value),
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: context.colorTextSecondary,
                                   fontSize: 10,
                                 ),
                                 textAlign: TextAlign.right,
@@ -116,7 +116,7 @@ class BarChartCard extends ConsumerWidget {
                               child: Text(
                                 _months[idx],
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: context.colorTextSecondary,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -180,14 +180,14 @@ class BarChartCard extends ConsumerWidget {
                 child: CircularProgressIndicator(),
               ),
             ),
-            error: (err, _) => _buildNoData(),
+            error: (err, _) => _buildNoData(context),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLegendDot(String label, Color color) {
+  Widget _buildLegendDot(BuildContext context, String label, Color color) {
     return Row(
       children: [
         Container(
@@ -199,7 +199,7 @@ class BarChartCard extends ConsumerWidget {
         Text(
           label,
           style: AppTextStyles.caption.copyWith(
-            color: AppColors.textSecondary,
+            color: context.colorTextSecondary,
             fontWeight: FontWeight.w600,
             fontSize: 11,
           ),
@@ -208,18 +208,18 @@ class BarChartCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildNoData() {
+  Widget _buildNoData(BuildContext context) {
     return Container(
       height: 180,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.bar_chart_rounded, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+          Icon(Icons.bar_chart_rounded, size: 48, color: context.colorTextSecondary.withValues(alpha: 0.4)),
           const SizedBox(height: 12),
           Text(
             'No transaction data for $year',
-            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.caption.copyWith(color: context.colorTextSecondary),
           ),
         ],
       ),

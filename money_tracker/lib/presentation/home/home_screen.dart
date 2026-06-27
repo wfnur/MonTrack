@@ -36,7 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final transactionsAsync = ref.watch(transactionListProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: context.colorBackground,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(
@@ -50,14 +50,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Text(
                 _greeting(),
                 style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
+                  color: context.colorTextSecondary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 'Your Finances',
                 style: AppTextStyles.headline.copyWith(
-                  color: AppColors.textPrimary,
+                  color: context.colorTextPrimary,
                 ),
               ),
               const SizedBox(height: 20),
@@ -77,7 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Text(
                     'Recent',
                     style: AppTextStyles.title.copyWith(
-                      color: AppColors.textPrimary,
+                      color: context.colorTextPrimary,
                     ),
                   ),
                   TextButton(
@@ -87,7 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Text(
                       'See All',
                       style: AppTextStyles.caption.copyWith(
-                        color: AppColors.primary,
+                        color: context.colorPrimary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

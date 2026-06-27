@@ -73,12 +73,14 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        brightness: Brightness.dark,
+      colorScheme: const ColorScheme.dark(
+        primary: AppColors.darkPrimary,
+        surface: AppColors.darkSurface,
+        onSurface: AppColors.darkTextPrimary,
       ),
       scaffoldBackgroundColor: AppColors.darkBackground,
       cardTheme: CardThemeData(
+        color: AppColors.darkSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -91,34 +93,36 @@ class AppTheme {
         backgroundColor: AppColors.darkSurface,
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        selectedItemColor: AppColors.primary,
+        selectedItemColor: AppColors.darkPrimary,
         backgroundColor: AppColors.darkSurface,
         elevation: 0,
       ),
-      navigationBarTheme: const NavigationBarThemeData(
+      navigationBarTheme: NavigationBarThemeData(
         height: 68,
         backgroundColor: AppColors.darkSurface,
+        indicatorColor: AppColors.darkPrimarySurface,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(),
-          backgroundColor: AppColors.primary,
+          backgroundColor: AppColors.darkPrimary,
           foregroundColor: Colors.white,
           elevation: 0,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.darkSurface,
+        fillColor: AppColors.darkInputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
+      dividerColor: AppColors.darkBorder,
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.darkSurface,
+        backgroundColor: AppColors.darkBackground,
         elevation: 0,
-        titleTextStyle: AppTextStyles.title.copyWith(color: Colors.white),
+        titleTextStyle: AppTextStyles.title.copyWith(color: AppColors.darkTextPrimary),
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: {

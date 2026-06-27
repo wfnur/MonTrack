@@ -21,6 +21,7 @@ class SummaryCards extends StatelessWidget {
       children: [
         Expanded(
           child: _buildCard(
+            context: context,
             label: 'Income',
             amount: totalIncome,
             color: AppColors.income,
@@ -30,6 +31,7 @@ class SummaryCards extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: _buildCard(
+            context: context,
             label: 'Expense',
             amount: totalExpense,
             color: AppColors.expense,
@@ -39,9 +41,10 @@ class SummaryCards extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: _buildCard(
+            context: context,
             label: 'Net Balance',
             amount: netBalance,
-            color: AppColors.primary,
+            color: context.colorPrimary,
             icon: Icons.account_balance_wallet_rounded,
           ),
         ),
@@ -50,6 +53,7 @@ class SummaryCards extends StatelessWidget {
   }
 
   Widget _buildCard({
+    required BuildContext context,
     required String label,
     required double amount,
     required Color color,
@@ -58,9 +62,9 @@ class SummaryCards extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +84,7 @@ class SummaryCards extends StatelessWidget {
                 child: Text(
                   label,
                   style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.colorTextSecondary,
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
                   ),

@@ -34,9 +34,9 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.colorBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
           Text(
             '${widget.type == TransactionType.income ? "Income" : "Expense"} by Category',
             style: AppTextStyles.title.copyWith(
-              color: AppColors.textPrimary,
+              color: context.colorTextPrimary,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -121,7 +121,7 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                           decoration: BoxDecoration(
-                            color: isTouched ? AppColors.primarySurface : Colors.transparent,
+                            color: isTouched ? context.colorPrimarySurface : Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
@@ -140,14 +140,14 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
                                   cat.name,
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: isTouched ? FontWeight.w700 : FontWeight.w500,
-                                    color: AppColors.textPrimary,
+                                    color: context.colorTextPrimary,
                                   ),
                                 ),
                               ),
                               Text(
                                 '${percentage.toStringAsFixed(1)}%',
                                 style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.textSecondary,
+                                  color: context.colorTextSecondary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -156,7 +156,7 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
                                 CurrencyFormatter.formatCompact(item.total),
                                 style: AppTextStyles.body.copyWith(
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
+                                  color: context.colorTextPrimary,
                                 ),
                               ),
                             ],
@@ -188,7 +188,7 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
         id: id,
         name: 'Other',
         icon: 'help',
-        color: AppColors.textSecondary.toARGB32(),
+        color: context.colorTextSecondary.toARGB32(),
         type: widget.type == TransactionType.income ? CategoryType.income : CategoryType.expense,
         isDefault: false,
         sortOrder: 999,
@@ -203,11 +203,11 @@ class _PieChartCardState extends ConsumerState<PieChartCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.pie_chart_outline_rounded, size: 48, color: AppColors.textSecondary.withValues(alpha: 0.4)),
+          Icon(Icons.pie_chart_outline_rounded, size: 48, color: context.colorTextSecondary.withValues(alpha: 0.4)),
           const SizedBox(height: 12),
           Text(
             'No data available for this range',
-            style: AppTextStyles.caption.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.caption.copyWith(color: context.colorTextSecondary),
           ),
         ],
       ),
