@@ -30,6 +30,10 @@ class TransactionRepository {
     return row?.toModel();
   }
 
+  Stream<TransactionModel?> watchById(String id) {
+    return _dao.watchById(id).map((row) => row?.toModel());
+  }
+
   Future<void> add(TransactionModel m) => _dao.insertTransaction(
         TransactionsCompanion.insert(
           id: m.id,

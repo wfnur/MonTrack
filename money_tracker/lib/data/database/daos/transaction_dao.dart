@@ -36,6 +36,9 @@ class TransactionDao extends DatabaseAccessor<AppDatabase> with _$TransactionDao
   Future<Transaction?> getById(String id) =>
       (select(transactions)..where((t) => t.id.equals(id))).getSingleOrNull();
 
+  Stream<Transaction?> watchById(String id) =>
+      (select(transactions)..where((t) => t.id.equals(id))).watchSingleOrNull();
+
   Future<void> insertTransaction(TransactionsCompanion entry) =>
       into(transactions).insert(entry);
 

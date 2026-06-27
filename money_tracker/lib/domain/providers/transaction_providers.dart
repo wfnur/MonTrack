@@ -45,3 +45,8 @@ Stream<List<TransactionModel>> transactionList(TransactionListRef ref) {
         range: filter.range,
       );
 }
+
+@riverpod
+Stream<TransactionModel?> transactionById(TransactionByIdRef ref, String id) {
+  return ref.watch(transactionRepositoryProvider).watchById(id);
+}

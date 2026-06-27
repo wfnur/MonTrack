@@ -11,6 +11,7 @@ import '../../../domain/providers/transaction_providers.dart';
 import '../../../domain/providers/category_providers.dart';
 import 'widgets/transaction_tile.dart';
 import 'widgets/filter_drawer.dart';
+import '../form/transaction_form_sheet.dart';
 
 class TransactionListScreen extends ConsumerStatefulWidget {
   const TransactionListScreen({super.key});
@@ -190,7 +191,7 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                   category: categoryMap[tx.categoryId],
                   onTap: () => context.push('/transactions/${tx.id}'),
                   onEdit: () {
-                    // TODO: Open edit form
+                    TransactionFormSheet.show(context, initialData: tx);
                   },
                   onDelete: () {
                     ref
