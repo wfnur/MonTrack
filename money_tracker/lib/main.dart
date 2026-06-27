@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
   final prefs = await SharedPreferences.getInstance();
-  final savedCurrency = prefs.getString('selected_currency') ?? 'IDR';
+  final savedCurrency = prefs.getString('selected_currency') ?? prefs.getString('currency_code') ?? 'IDR';
   CurrencyFormatter.setCurrency(savedCurrency);
 
   runApp(
@@ -30,13 +30,14 @@ class MoneyTrackerApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeNotifierProvider);
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
       title: 'Money Tracker',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
-      routerConfig: appRouter,
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
   }

@@ -10,6 +10,8 @@ SharedPreferences sharedPreferences(SharedPreferencesRef ref) {
   throw UnimplementedError();
 }
 
+final sharedPrefsProvider = sharedPreferencesProvider;
+
 const kAvailableCurrencies = [
   ('IDR', 'Indonesian Rupiah', 'Rp'),
   ('USD', 'United States Dollar', '\$'),

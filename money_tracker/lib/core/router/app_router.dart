@@ -10,10 +10,26 @@ import '../../presentation/settings/categories/categories_screen.dart';
 import '../../presentation/settings/labels/labels_screen.dart';
 import '../../presentation/settings/export/export_screen.dart';
 
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/home',
-  routes: [
-    ShellRoute(
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/providers/settings_providers.dart';
+import '../../presentation/onboarding/onboarding_screen.dart';
+
+final appRouterProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    initialLocation: '/home',
+    redirect: (context, state) {
+      final prefs = ref.read(sharedPrefsProvider);
+      final done = prefs.getBool('onboarding_complete') ?? false;
+      if (!done && state.matchedLocation != '/onboarding') return '/onboarding';
+      if (done && state.matchedLocation == '/onboarding') return '/home';
+      return null;
+    },
+    routes: [
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      ShellRoute(
       builder: (context, state, child) => AppShell(child: child),
       routes: [
         GoRoute(
@@ -62,3 +78,4 @@ final GoRouter appRouter = GoRouter(
     ),
   ],
 );
+});
