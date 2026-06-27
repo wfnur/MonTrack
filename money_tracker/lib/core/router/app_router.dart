@@ -5,6 +5,10 @@ import '../../presentation/transactions/list/transaction_list_screen.dart';
 import '../../presentation/transactions/detail/transaction_detail_screen.dart';
 import '../../presentation/analytics/analytics_screen.dart';
 import '../../presentation/settings/settings_screen.dart';
+import '../../presentation/settings/wallets/wallets_screen.dart';
+import '../../presentation/settings/categories/categories_screen.dart';
+import '../../presentation/settings/labels/labels_screen.dart';
+import '../../presentation/settings/export/export_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/home',
@@ -35,6 +39,24 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: '/settings',
           builder: (context, state) => const SettingsScreen(),
+          routes: [
+            GoRoute(
+              path: 'wallets',
+              builder: (context, state) => const WalletsScreen(),
+            ),
+            GoRoute(
+              path: 'categories',
+              builder: (context, state) => const CategoriesScreen(),
+            ),
+            GoRoute(
+              path: 'labels',
+              builder: (context, state) => const LabelsScreen(),
+            ),
+            GoRoute(
+              path: 'export',
+              builder: (context, state) => const ExportScreen(),
+            ),
+          ],
         ),
       ],
     ),
