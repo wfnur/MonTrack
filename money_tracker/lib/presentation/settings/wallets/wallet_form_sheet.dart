@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/animation_utils.dart';
 import '../../../../data/models/pocket_model.dart';
 import '../../../../domain/providers/pocket_providers.dart';
 
@@ -13,10 +14,8 @@ class WalletFormSheet extends ConsumerStatefulWidget {
   const WalletFormSheet({super.key, this.initialData});
 
   static Future<void> show(BuildContext context, {PocketModel? initialData}) {
-    return showModalBottomSheet(
+    return showAnimatedBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (_) => WalletFormSheet(initialData: initialData),
     );
   }

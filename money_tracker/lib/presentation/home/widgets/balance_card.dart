@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/utils/animation_utils.dart';
 import '../../../core/utils/currency_formatter.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -48,8 +49,10 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            CurrencyFormatter.format(totalBalance),
+          AnimatedCounter(
+            value: totalBalance,
+            duration: const Duration(milliseconds: 600),
+            formatter: (v) => CurrencyFormatter.format(v),
             style: AppTextStyles.display.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -114,14 +117,15 @@ class BalanceCard extends StatelessWidget {
                       fontSize: 11,
                     ),
                   ),
-                  Text(
-                    CurrencyFormatter.formatCompact(amount),
+                   AnimatedCounter(
+                    value: amount,
+                    duration: const Duration(milliseconds: 500),
+                    formatter: (v) => CurrencyFormatter.formatCompact(v),
                     style: AppTextStyles.body.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

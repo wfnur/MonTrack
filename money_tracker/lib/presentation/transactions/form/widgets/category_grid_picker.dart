@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/animation_utils.dart';
 import '../../../../data/models/category_model.dart';
 import '../../../../domain/providers/category_providers.dart';
 
@@ -131,7 +132,11 @@ class _CategoryGridPickerState extends ConsumerState<CategoryGridPicker> {
                         final cat = filtered[index];
                         final isSelected =
                             cat.id == widget.selectedCategoryId;
-                        return _buildCategoryItem(cat, isSelected);
+                        return StaggeredEntrance(
+                          index: index,
+                          itemDelay: const Duration(milliseconds: 30),
+                          child: _buildCategoryItem(cat, isSelected),
+                        );
                       },
                     );
                   },

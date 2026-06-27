@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/animation_utils.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../data/models/category_model.dart';
@@ -98,10 +99,8 @@ class TransactionFormSheet extends ConsumerStatefulWidget {
     BuildContext context, {
     TransactionModel? initialData,
   }) {
-    return showModalBottomSheet(
+    return showAnimatedBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (_) => TransactionFormSheet(initialData: initialData),
     );
   }

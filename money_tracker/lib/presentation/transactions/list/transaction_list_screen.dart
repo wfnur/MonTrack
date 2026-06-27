@@ -186,7 +186,25 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
               ),
             ),
             // Transaction items in this group
-            ...items.map((tx) => TransactionTile(
+            ...items.asMap().entries.map((entry) {
+              final idx = entry.key;
+              final tx = entry.value;
+              return TweenAnimationBuilder<double>(
+                key: ValueKey(tx.id),
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: Duration(milliseconds: 400 + (idx * 60)),
+                curve: Curves.elasticOut,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: value.clamp(0.0, 1.0),
+                    alignment: Alignment.centerLeft,
+                    child: Opacity(
+                      opacity: value.clamp(0.0, 1.0),
+                      child: child,
+                    ),
+                  );
+                },
+                child: TransactionTile(
                   transaction: tx,
                   category: categoryMap[tx.categoryId],
                   onTap: () => context.push('/transactions/${tx.id}'),
@@ -198,7 +216,9 @@ class _TransactionListScreenState extends ConsumerState<TransactionListScreen> {
                         .read(transactionRepositoryProvider)
                         .delete(tx.id);
                   },
-                )),
+                ),
+              );
+            }),
           ],
         );
       },

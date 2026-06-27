@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
+import '../../../core/utils/animation_utils.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../../domain/providers/settings_providers.dart';
 
@@ -302,12 +303,10 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showAppearanceSheet(BuildContext context, WidgetRef ref, ThemeMode currentMode) {
-    showModalBottomSheet(
+    showAnimatedBottomSheet(
       context: context,
+      isScrollControlled: false,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
       builder: (ctx) => SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),

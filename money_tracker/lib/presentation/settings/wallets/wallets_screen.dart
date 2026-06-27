@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/animation_utils.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../data/models/pocket_model.dart';
 import '../../../../domain/providers/pocket_providers.dart';
@@ -409,12 +410,10 @@ class _PocketCard extends ConsumerWidget {
   }
 
   void _showMenu(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    showAnimatedBottomSheet(
       context: context,
+      isScrollControlled: false,
       backgroundColor: AppColors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,

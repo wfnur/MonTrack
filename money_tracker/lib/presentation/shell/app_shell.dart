@@ -1,17 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/app_colors.dart';
+import '../../core/utils/animation_utils.dart';
+import '../../domain/providers/settings_providers.dart';
 import '../transactions/form/transaction_form_sheet.dart';
 
-class AppShell extends StatefulWidget {
+class AppShell extends ConsumerStatefulWidget {
   final Widget child;
 
   const AppShell({super.key, required this.child});
 
   @override
-  State<AppShell> createState() => _AppShellState();
+  ConsumerState<AppShell> createState() => _AppShellState();
 }
 
-class _AppShellState extends State<AppShell> {
+class _AppShellState extends ConsumerState<AppShell>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _fabPulseController;
+  late Animation<double> _fabScaleAnimation;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _fabPulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+    _fabScaleAnimation = TweenSequence<double>([
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.15), weight: 30),
+      TweenSequenceItem(tween: Tween(begin: 1.15, end: 0.95), weight: 20),
+      TweenSequenceItem(tween: Tween(begin: 0.95, end: 1.05), weight: 20),
+      TweenSequenceItem(tween: Tween(begin: 1.05, end: 1.0), weight: 30),
+    ]).animate(CurvedAnimation(
+      parent: _fabPulseController,
+      curve: Curves.easeInOut,
+    ));
+    _checkFirstLaunchPulse();
+  }
+
+  Future<void> _checkFirstLaunchPulse() async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final hasPlayed = prefs.getBool('fab_pulse_played') ?? false;
+    if (!hasPlayed) {
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (mounted) {
+        _fabPulseController.repeat(count: 2);
+        _fabPulseController.addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            prefs.setBool('fab_pulse_played', true);
+          }
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _fabPulseController.dispose();
+    super.dispose();
+  }
+
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/transactions')) {
@@ -73,15 +123,19 @@ class _AppShellState extends State<AppShell> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => const TransactionFormSheet(),
-          );
-        },
-        label: const Text('+ Add'),
+      floatingActionButton: ScaleTransition(
+        scale: _fabScaleAnimation,
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            showAnimatedBottomSheet(
+              context: context,
+              builder: (context) => const TransactionFormSheet(),
+            );
+          },
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          label: const Text('+ Add'),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

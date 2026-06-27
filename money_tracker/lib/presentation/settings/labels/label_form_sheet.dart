@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
+import '../../../../core/utils/animation_utils.dart';
 import '../../../../data/models/label_model.dart';
 import '../../../../domain/providers/label_providers.dart';
 
@@ -12,10 +13,8 @@ class LabelFormSheet extends ConsumerStatefulWidget {
   const LabelFormSheet({super.key, this.initialData});
 
   static Future<void> show(BuildContext context, {LabelModel? initialData}) {
-    return showModalBottomSheet(
+    return showAnimatedBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (_) => LabelFormSheet(initialData: initialData),
     );
   }
